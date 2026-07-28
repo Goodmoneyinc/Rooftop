@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 
-// Variable font, restricted to the opsz axis (optical size) on top of the
-// default wght axis — one woff2 file covers the full 400-600 weight range
-// used across the hero, instead of shipping a separate static file per weight.
+// Variable font. Beyond the default wght axis, this pulls in the optional
+// opsz (optical size), SOFT (softness of terminals) and WONK (wonky/alternate
+// forms) axes so the headline can be pushed to a sharp, display-tuned
+// rendering via font-variation-settings — see Hero.tsx.
 const fraunces = Fraunces({
   subsets: ['latin'],
-  axes: ['opsz'],
+  axes: ['opsz', 'SOFT', 'WONK'],
   variable: '--font-display',
   display: 'swap',
 });

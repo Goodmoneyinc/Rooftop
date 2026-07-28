@@ -176,10 +176,17 @@ export default function Hero() {
           animate="visible"
           variants={fadeUpHeavy}
           transition={{ duration: 0.5, delay: 0.65, ease: 'easeOut' }}
-          className="mt-6 font-display font-medium text-bone"
+          className="mt-6 font-display font-extrabold text-bone"
           style={{
             fontSize: 'clamp(2.75rem, 6vw, 5.5rem)',
             lineHeight: 0.97,
+            // SOFT 0 sharpens the terminals (Fraunces' default has some
+            // roundness), opsz 144 pulls in the display-tuned optical size
+            // (higher-contrast strokes, built for exactly this scale) — both
+            // read bolder even independent of the 800 font-weight above.
+            // wght is deliberately left out of this list so the Tailwind
+            // class above keeps controlling it instead of being overridden.
+            fontVariationSettings: "'SOFT' 0, 'WONK' 0, 'opsz' 144",
           }}
         >
           Built to Outlast
@@ -205,7 +212,7 @@ export default function Hero() {
         >
           <Link
             href="#quote"
-            className="inline-flex items-center justify-center rounded-sm bg-bone px-8 py-4 font-body text-sm font-medium tracking-wide text-ink transition-all duration-300 ease-out hover:scale-[1.02] hover:bg-copper-dark hover:text-bone hover:shadow-lg hover:shadow-ink/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-bone"
+            className="inline-flex items-center justify-center rounded-sm border-2 border-copper bg-bone px-10 py-4 font-body text-base font-semibold tracking-[0.02em] text-ink transition-all duration-200 ease-out hover:scale-[1.03] hover:bg-copper hover:shadow-lg hover:shadow-ink/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-bone"
           >
             Get a Quote
           </Link>
