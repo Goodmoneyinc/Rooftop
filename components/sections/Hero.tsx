@@ -97,31 +97,37 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Image column — full-bleed, sits on top on mobile (its own 60vh
-          composition), fills the remaining 62% alongside the text on desktop. */}
-      <div className="relative order-1 h-[60vh] w-full overflow-hidden lg:order-2 lg:h-auto lg:min-h-screen lg:w-[62%] lg:border-l lg:border-copper">
-        <motion.div
-          className="absolute inset-0"
-          initial={{ scale: 1 }}
-          animate={
-            prefersReducedMotion ? { scale: 1 } : { scale: [1, 1.04, 1] }
-          }
-          transition={
-            prefersReducedMotion
-              ? { duration: 0 }
-              : { duration: 15, ease: 'linear', repeat: Infinity }
-          }
-        >
-          <Image
-            src="/hero-roof-macro.jpg"
-            alt="Macro detail of interlocking shingles and copper flashing, showing the tight, weatherproof seams of a finished roof"
-            fill
-            priority
-            fetchPriority="high"
-            sizes="(min-width: 1024px) 62vw, 100vw"
-            className="object-cover"
-          />
-        </motion.div>
+      {/* Video column — a framed panel, not a background fill. Generous bone
+          whitespace surrounds it (mirroring the text column's rhythm) and it
+          never exceeds its 624px source resolution, so it's never upscaled. */}
+      <div className="order-1 flex w-full items-center justify-center bg-bone px-6 py-10 sm:px-10 sm:py-14 lg:order-2 lg:w-[62%] lg:px-12 lg:py-16 xl:px-16 xl:py-20">
+        <div className="relative aspect-square w-full max-w-[624px] overflow-hidden border border-copper">
+          {prefersReducedMotion ? (
+            <Image
+              src="/hero/roofing-hero-poster.jpg"
+              alt="Macro detail of interlocking shingles and copper flashing, showing the tight, weatherproof seams of a finished roof"
+              fill
+              priority
+              fetchPriority="high"
+              sizes="(min-width: 1024px) 624px, 100vw"
+              className="object-cover"
+            />
+          ) : (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster="/hero/roofing-hero-poster.jpg"
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            >
+              <source src="/hero/roofing-hero-ripple.webm" type="video/webm" />
+              <source src="/hero/roofing-hero-ripple.mp4" type="video/mp4" />
+            </video>
+          )}
+        </div>
       </div>
     </section>
   );
