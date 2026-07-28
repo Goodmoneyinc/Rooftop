@@ -9,7 +9,9 @@ const config: Config = {
         ink: '#1A1815',
         copper: '#B0663F',
         'copper-dark': '#8A4E2F',
-        stone: '#8C8578',
+        // 6.44:1 against bone (#F4F1EA) — passes WCAG AA for body text (4.5:1)
+        // with headroom; the old #8C8578 only hit ~3.24:1.
+        stone: '#5C564C',
       },
       fontFamily: {
         // next/font exposes the loaded families as CSS variables (set in app/layout.tsx),

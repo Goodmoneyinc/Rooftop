@@ -2,11 +2,32 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { usePrefersReducedMotion } from '@/lib/hooks/usePrefersReducedMotion';
 
 export default function Hero() {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Safari (iOS in particular) can fail to honor the `muted` JSX attribute on
+  // initial render/hydration, which silently blocks autoplay — setting it
+  // imperatively here is the documented workaround. Runs again whenever the
+  // reduced-motion query flips, since the <video> unmounts/remounts then.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || prefersReducedMotion) return;
+
+    video.muted = true;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay was blocked (e.g. iOS Low Power Mode) — the poster frame
+        // stays visible in place of a stalled video, which is an acceptable
+        // fallback rather than something to retry aggressively.
+      });
+    }
+  }, [prefersReducedMotion]);
 
   // Shared rise-and-fade shape for the text stack. Each child overrides only
   // its `transition` (duration/delay), keeping the motion language identical
@@ -35,9 +56,12 @@ export default function Hero() {
       aria-label="Introduction"
       className="flex min-h-screen w-full flex-col lg:flex-row"
     >
-      {/* Text column — first in DOM so screen readers reach the headline
-          immediately, regardless of the visual order set below for mobile. */}
-      <div className="order-2 flex w-full flex-col justify-center bg-bone px-6 py-14 sm:px-10 sm:py-16 lg:order-1 lg:w-[38%] lg:py-0 lg:pl-20 lg:pr-12 xl:pl-28 xl:pr-16">
+      {/* Text column — first in DOM and first on screen at every breakpoint:
+          mobile users read what the page is about before they scroll past
+          a video. Mobile padding is tuned for this reading order specifically
+          (generous top since it opens the page, lighter bottom since the
+          video panel immediately follows), not a scaled-down desktop value. */}
+      <div className="flex w-full flex-col justify-center bg-bone px-6 pb-10 pt-20 sm:px-10 sm:pb-12 sm:pt-24 lg:w-[38%] lg:py-0 lg:pl-20 lg:pr-12 xl:pl-28 xl:pr-16">
         <motion.p
           initial="hidden"
           animate="visible"
@@ -97,10 +121,12 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Video column — a framed panel, not a background fill. Generous bone
-          whitespace surrounds it (mirroring the text column's rhythm) and it
-          never exceeds its 624px source resolution, so it's never upscaled. */}
-      <div className="order-1 flex w-full items-center justify-center bg-bone px-6 py-10 sm:px-10 sm:py-14 lg:order-2 lg:w-[62%] lg:px-12 lg:py-16 xl:px-16 xl:py-20">
+      {/* Video column — a framed panel, not a background fill, on both
+          breakpoints: bone whitespace surrounds it and it never exceeds its
+          624px source resolution, so it's never upscaled. Mobile top padding
+          is intentionally small (the text column above already provided the
+          gap) while bottom padding is generous to close out the section. */}
+      <div className="flex w-full items-center justify-center bg-bone px-6 pb-16 pt-4 sm:px-10 sm:pb-20 sm:pt-6 lg:w-[62%] lg:px-12 lg:py-16 xl:px-16 xl:py-20">
         <div className="relative aspect-square w-full max-w-[624px] overflow-hidden border border-copper">
           {prefersReducedMotion ? (
             <Image
@@ -114,6 +140,7 @@ export default function Hero() {
             />
           ) : (
             <video
+              ref={videoRef}
               autoPlay
               muted
               loop
