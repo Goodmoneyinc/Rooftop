@@ -12,6 +12,11 @@ const config: Config = {
         // 6.44:1 against bone (#F4F1EA) — passes WCAG AA for body text (4.5:1)
         // with headroom; the old #8C8578 only hit ~3.24:1.
         stone: '#5C564C',
+        // Muted cream for text over the dark video scrim (hero overlay), a
+        // genuinely lighter/dimmer color rather than bone at reduced opacity.
+        // Verified >=4.5:1 against the darkest sampled point of the actual
+        // composited scrim-over-video background — see Hero.tsx.
+        haze: '#D9D2C2',
       },
       fontFamily: {
         // next/font exposes the loaded families as CSS variables (set in app/layout.tsx),
